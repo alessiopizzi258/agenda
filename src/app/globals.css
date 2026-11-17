@@ -1,23 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --leather-bg: #1a1a1a;
-  --paper-bg: #fdfbf7;
-  --line-color: #e2dfd8;
+  --desk-bg: #e5e4e2; /* Sfondo neutro scrivania */
+  --paper-bg: #fdfbf7; /* Carta cotone */
+  --line-color: #e8e6e1;
+  --text-main: #2c2c2c;
 }
 
 body {
-  background-color: var(--leather-bg);
-  color: #333;
+  background-color: var(--desk-bg);
+  color: var(--text-main);
   overflow: hidden;
 }
 
+.font-serif-luxury {
+  font-family: 'Playfair Display', serif;
+}
+
 .notebook-paper {
-  background-color: var(--paper-bg);
+  background-color: transparent;
   background-image: repeating-linear-gradient(
     transparent,
     transparent 31px,
@@ -31,8 +36,9 @@ body {
 
 .font-pen {
   font-family: 'Caveat', cursive;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   letter-spacing: 0.02em;
+  color: #1a365d; /* Inchiostro blu scuro elegante */
 }
 
 ::-webkit-scrollbar { width: 0px; background: transparent; }
