@@ -1,69 +1,94 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
+import { it } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useAgendaStore } from '@/store/useAgendaStore';
+
+export default function EliteAgenda() {
+  const { selectedDate, notes, setSelectedDate, updateNote } = useAgendaStore();
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Evita l'idratazione errata lato server per lo store persistente
+  useEffect(() => setIsMounted(true), []);
+
+  const dateKey = format(selectedDate, 'yyyy-MM-dd');
+  const currentNote = notes[dateKey] || '';
+
+  const daysInMonth = eachDayOfInterval({
+    start: startOfMonth(currentMonth),
+    end: endOfMonth(currentMonth)
+  });
+
+  if (!isMounted) return null; // Schermata nera fulminea fino al mount completato
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <main className="flex w-full h-full flex-col md:flex-row bg-[#1a1a1a] p-2 md:p-6 gap-6">
+      
+      {/* SEZIONE SINISTRA: Calendario (Pelle/Scuro) */}
+      <section className="w-full md:w-[350px] flex-shrink-0 bg-[#222] rounded-2xl p-6 text-white shadow-2xl border border-[#333] flex flex-col">
+        <div className="flex justify-between items-center mb-8">
+          <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 hover:bg-[#333] rounded-lg transition-colors">
+            <ChevronLeft size={20} />
+          </button>
+          <h2 className="text-xl font-medium tracking-wide uppercase">
+            {format(currentMonth, 'MMMM yyyy', { locale: it })}
+          </h2>
+          <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-2 hover:bg-[#333] rounded-lg transition-colors">
+            <ChevronRight size={20} />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs text-gray-500 uppercase font-bold">
+          {['Do', 'Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa'].map(day => <div key={day}>{day}</div>)}
+        </div>
+
+        <div className="grid grid-cols-7 gap-2 flex-grow">
+          {daysInMonth.map(day => {
+            const isSelected = isSameDay(day, selectedDate);
+            const hasNote = notes[format(day, 'yyyy-MM-dd')]?.trim().length > 0;
+            return (
+              <button
+                key={day.toString()}
+                onClick={() => setSelectedDate(day)}
+                className={`
+                  relative h-10 w-full rounded-lg flex items-center justify-center text-sm font-medium transition-all
+                  ${isSelected ? 'bg-white text-black shadow-lg scale-110 z-10' : 'hover:bg-[#333] text-gray-300'}
+                  ${isToday(day) && !isSelected ? 'border border-gray-600' : ''}
+                `}
+              >
+                {format(day, 'd')}
+                {hasNote && !isSelected && (
+                  <span className="absolute bottom-1 w-1 h-1 bg-gray-400 rounded-full"></span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* SEZIONE DESTRA: Taccuino (Carta/Chiaro) */}
+      <section className="flex-grow bg-[#fdfbf7] rounded-r-3xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col relative border-l-4 border-[#111]">
+        {/* Rilegatura visiva */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/10 to-transparent z-10 pointer-events-none"></div>
+        
+        <header className="px-10 py-6 border-b border-gray-200 bg-white/50 backdrop-blur-sm z-20">
+          <h1 className="text-3xl font-bold text-gray-800">
+            {format(selectedDate, 'EEEE, d MMMM yyyy', { locale: it })}
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        </header>
+
+        <textarea
+          value={currentNote}
+          onChange={(e) => updateNote(dateKey, e.target.value)}
+          placeholder="Inizia a scrivere i task operativi..."
+          className="flex-grow w-full resize-none outline-none p-10 notebook-paper font-pen text-gray-900 bg-transparent z-0"
+          spellCheck="false"
+        />
+      </section>
+
+    </main>
   );
 }
