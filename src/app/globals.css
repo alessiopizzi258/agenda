@@ -1,44 +1,60 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
 
 :root {
-  --desk-bg: #e5e4e2; /* Sfondo neutro scrivania */
-  --paper-bg: #fdfbf7; /* Carta cotone */
-  --line-color: #e8e6e1;
-  --text-main: #2c2c2c;
+  --desk-bg: #141413;
+  --leather-cover: #1f1d1b;
+  --paper-bg: #faf7f0;
+  --paper-line: #e6e0d4;
+  --margin-line: #e8b4b4;
+  --ink-primary: #1a2a44;
+  --ink-charcoal: #2c2a29;
+  --gold-accent: #c5a059;
 }
 
 body {
   background-color: var(--desk-bg);
-  color: var(--text-main);
-  overflow: hidden;
+  color: var(--ink-charcoal);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .font-serif-luxury {
   font-family: 'Playfair Display', serif;
 }
 
-.notebook-paper {
-  background-color: transparent;
-  background-image: repeating-linear-gradient(
-    transparent,
-    transparent 31px,
-    var(--line-color) 31px,
-    var(--line-color) 32px
-  );
-  background-attachment: local;
-  line-height: 32px;
-  padding-top: 8px;
-}
-
 .font-pen {
   font-family: 'Caveat', cursive;
-  font-size: 1.6rem;
-  letter-spacing: 0.02em;
-  color: #1a365d; /* Inchiostro blu scuro elegante */
 }
 
-::-webkit-scrollbar { width: 0px; background: transparent; }
+/* Texture e righe del foglio a destra */
+.ruled-paper {
+  background-color: var(--paper-bg);
+  background-image: 
+    linear-gradient(90deg, transparent 39px, var(--margin-line) 39px, var(--margin-line) 41px, transparent 41px),
+    repeating-linear-gradient(transparent, transparent 35px, var(--paper-line) 35px, var(--paper-line) 36px);
+  background-attachment: local;
+  line-height: 36px;
+}
+
+/* Sottile griglia per la pagina del calendario a sinistra */
+.dot-paper {
+  background-color: var(--paper-bg);
+  background-image: radial-gradient(#d8d2c5 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Scrollbar invisibile ma funzionante */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+}
