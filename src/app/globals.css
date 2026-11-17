@@ -5,11 +5,15 @@
   --desk-bg: #141413;
   --leather-cover: #1f1d1b;
   --paper-bg: #faf7f0;
-  --paper-line: #e6e0d4;
-  --margin-line: #e8b4b4;
+  --paper-line: #e4decfe6;
+  --margin-line: #e5b3b3;
   --ink-primary: #1a2a44;
   --ink-charcoal: #2c2a29;
   --gold-accent: #c5a059;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -18,7 +22,7 @@ body {
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 .font-serif-luxury {
@@ -29,32 +33,40 @@ body {
   font-family: 'Caveat', cursive;
 }
 
-/* Texture e righe del foglio a destra */
+/* Foglio a righe con margine rosso adattivo per Mobile e Desktop */
 .ruled-paper {
   background-color: var(--paper-bg);
   background-image: 
-    linear-gradient(90deg, transparent 39px, var(--margin-line) 39px, var(--margin-line) 41px, transparent 41px),
+    linear-gradient(90deg, transparent 27px, var(--margin-line) 27px, var(--margin-line) 28.5px, transparent 28.5px),
     repeating-linear-gradient(transparent, transparent 35px, var(--paper-line) 35px, var(--paper-line) 36px);
-  background-attachment: local;
+  background-size: 100% 36px;
   line-height: 36px;
 }
 
-/* Sottile griglia per la pagina del calendario a sinistra */
-.dot-paper {
-  background-color: var(--paper-bg);
-  background-image: radial-gradient(#d8d2c5 1px, transparent 1px);
-  background-size: 20px 20px;
+@media (min-width: 640px) {
+  .ruled-paper {
+    background-image: 
+      linear-gradient(90deg, transparent 43px, var(--margin-line) 43px, var(--margin-line) 44.5px, transparent 44.5px),
+      repeating-linear-gradient(transparent, transparent 35px, var(--paper-line) 35px, var(--paper-line) 36px);
+  }
 }
 
-/* Scrollbar invisibile ma funzionante */
+/* Carta puntinata per il Calendario */
+.dot-paper {
+  background-color: var(--paper-bg);
+  background-image: radial-gradient(#d5cfc2 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Scrollbar elegante */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(44, 42, 41, 0.15);
   border-radius: 9999px;
 }
